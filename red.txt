@@ -1,0 +1,13 @@
+8
+A,B,C,D,E,F,G,H
+A,H
+A B 4
+A C 2
+B D 3
+B E 6
+C E 1
+D F 5
+E F 2
+E G 3
+F H 8
+G H 2
