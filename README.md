@@ -1,9 +1,9 @@
 # Proyecto Final Modelos Determinísticos y Estocásticos  
 
 ## Descripción
-Este repositorio/carpeta contendrá cuatro subcarpetas, cada una con uno de los cuatro algoritmos que fueron asignados al equipo.
+Este repositorio/carpeta contendrá cuatro subcarpetas, cada una con uno de los cuatro temas/algoritmos que fueron asignados al equipo.
 
-## Temas
+## Temas / Algoritmos
 1. **Simplex**: Resuelve problemas de programación lineal con restricciones de tipo `<=`, `=` y `>=`. Además indica la solución óptima (si existe), si el problema no está acotado, si no hay solución factible o si hay múltiples soluciones (se indica al menos una).
 2. **Transbordo**: En desarrollo...
 3. **Flujo máximo**: Obtiene y analiza el modelo de una red para determinar su flujo máximo, el flujo residual y las rutas que no son necesarias, en caso de que exista alguna.
