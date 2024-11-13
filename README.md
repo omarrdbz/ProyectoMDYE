@@ -1,7 +1,7 @@
 # Proyecto Final Modelos Determinísticos y Estocásticos  
 
 ## Descripción
-Este repositorio/carpeta contendrá cuatro subcarpetas, cada una con uno de los cuatro temas/algoritmos que fueron asignados al equipo.
+Este repositorio/carpeta contiene cuatro subcarpetas, cada una con uno de los cuatro temas/algoritmos que fueron asignados al equipo.
 
 ## Temas / Algoritmos
 1. **Simplex**: Resuelve problemas de programación lineal con restricciones de tipo `<=`, `=` y `>=`. Además indica la solución óptima (si existe), si el problema no está acotado, si no hay solución factible o si hay múltiples soluciones (se indica al menos una).
