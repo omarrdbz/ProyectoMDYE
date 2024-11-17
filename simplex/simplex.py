@@ -74,7 +74,7 @@ def solve_problem_from_file(file_path):
     # Imprimir los resultados dependiendo del estado de la solución
     if LpStatus[problem.status] == "Optimal":
         print("\nSolución encontrada:")
-        optimal_value = round(value(problem.objective))
+        optimal_value = value(problem.objective)
         print("\tValor óptimo:", optimal_value)
         print("\tValores de las variables:")
         for var in variables:
