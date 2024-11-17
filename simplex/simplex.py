@@ -1,92 +1,66 @@
-from pulp import LpMaximize, LpMinimize, LpProblem, LpStatus, LpVariable, value, lpSum, PULP_CBC_CMD 
+from pulp import LpMaximize, LpMinimize, LpProblem, LpStatus, LpVariable, value, lpSum, PULP_CBC_CMD
 import warnings
 
 # Ignorar advertencias de desuso
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-# Función para determinar el tipo de problema (maximización o minimización)
-def get_problem_type():
+def read_problem_from_file(file_path):
     """
-    Solicita al usuario que indique si el problema es de maximización o minimización.
-    
-    Returns:
-        bool: True si es un problema de minimización, False si es de maximización.
-    """
-    while True:
-        choice = input("¿Es un problema de maximización o minimización? (max/min): ").strip().lower()
-        if choice in ['max', 'min']:
-            return choice == 'min'
-        else:
-            print("Entrada inválida. Escribe 'max' para maximización o 'min' para minimización.")
+    Lee la configuración de un problema de programación lineal desde un archivo de texto.
 
-# Función para obtener la función objetivo
-def get_objective_function():
-    """
-    Solicita al usuario los coeficientes de la función objetivo.
-    
-    Returns:
-        list[float]: Lista de coeficientes de la función objetivo.
-    """
-    print("Introduce los coeficientes de la función objetivo (separados por comas):")
-    return list(map(float, input().split(',')))
+    Args:
+        file_path (str): Ruta del archivo de texto.
 
-# Función para obtener las restricciones
-def get_constraints():
-    """
-    Solicita al usuario ingresar las restricciones del problema, incluyendo los coeficientes, el tipo de desigualdad, y el lado derecho.
-    
     Returns:
-        list[tuple]: Lista de restricciones, donde cada restricción es un tuple con:
-                     (coeficientes, signo, lado derecho).
+        dict: Diccionario con tipo de problema, función objetivo y restricciones.
     """
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+
+    problem_data = {}
+    problem_data['type'] = lines[0].strip().lower()  # Tipo de problema: max o min
+    problem_data['objective'] = list(map(float, lines[1].strip().split(',')))  # Función objetivo
+
     constraints = []
-    while True:
-        print("\nIntroduce los coeficientes de la restricción (separados por comas), o deja en blanco para terminar:")
-        line = input().strip()
-        if not line:
-            break
-        coefficients = list(map(float, line.split(',')))
-        
-        # Solicitar el tipo de restricción
-        while True:
-            sign = input("Introduce el tipo de restricción (<=, =, >=): ").strip()
-            if sign in ['<=', '=', '>=']:
-                break
-            else:
-                print("Entrada inválida. Usa '<=', '=' o '>='.")
-        
-        # Solicitar el lado derecho de la restricción
-        rhs = float(input("Introduce el lado derecho de la restricción: "))
-        constraints.append((coefficients, sign, rhs))
-    
-    return constraints
+    for line in lines[2:]:
+        if line.strip():
+            parts = line.strip().split(';')
+            coefficients = list(map(float, parts[0].split(',')))
+            sign = parts[1].strip()
+            rhs = float(parts[2].strip())
+            constraints.append((coefficients, sign, rhs))
+    problem_data['constraints'] = constraints
 
-# Función principal para resolver el problema
-def solve_problem():
-    """
-    Resuelve un problema de programación lineal utilizando PuLP. Solicita al usuario definir el tipo de problema,
-    la función objetivo y las restricciones.
-    """
-    # Obtener tipo de problema, función objetivo y restricciones del usuario
-    is_minimization = get_problem_type()
-    objective       = get_objective_function()
-    constraints     = get_constraints()
+    return problem_data
 
-    # Definir el problema (maximización o minimización)
+def solve_problem_from_file(file_path):
+    """
+    Resuelve un problema de programación lineal definido en un archivo de texto.
+
+    Args:
+        file_path (str): Ruta del archivo de texto con la definición del problema.
+    """
+    # Leer datos del problema desde el archivo
+    problem_data = read_problem_from_file(file_path)
+
+    # Determinar el tipo de problema
+    is_minimization = problem_data['type'] == 'min'
+
+    # Crear el problema
     if is_minimization:
         problem = LpProblem("LP_Problem", LpMinimize)
     else:
         problem = LpProblem("LP_Problem", LpMaximize)
 
-    # Crear las variables de decisión (asumiendo todas tienen un límite inferior de 0)
-    num_vars = len(objective)
-    variables = [LpVariable(f"x{i+1}", lowBound=0) for i in range(num_vars)]
+    # Crear las variables de decisión
+    num_vars = len(problem_data['objective'])
+    variables = [LpVariable(f"x{i+1}", lowBound=0,  cat="Integer") for i in range(num_vars)]
 
     # Definir la función objetivo
-    problem += lpSum([objective[i] * variables[i] for i in range(num_vars)]), "Objective_Function"
+    problem += lpSum([problem_data['objective'][i] * variables[i] for i in range(num_vars)]), "Objective_Function"
 
     # Agregar restricciones
-    for coeffs, sign, rhs in constraints:
+    for coeffs, sign, rhs in problem_data['constraints']:
         if sign == "<=":
             problem += lpSum([coeffs[i] * variables[i] for i in range(num_vars)]) <= rhs
         elif sign == "=":
@@ -94,26 +68,20 @@ def solve_problem():
         elif sign == ">=":
             problem += lpSum([coeffs[i] * variables[i] for i in range(num_vars)]) >= rhs
 
-    # Resolver el problema usando el solver CBC (por defecto de PuLP)
+    # Resolver el problema usando el solver CBC
     problem.solve(PULP_CBC_CMD(msg=False))
 
     # Imprimir los resultados dependiendo del estado de la solución
     if LpStatus[problem.status] == "Optimal":
         print("\nSolución encontrada:")
-        optimal_value = value(problem.objective)
+        optimal_value = round(value(problem.objective))
         print("\tValor óptimo:", optimal_value)
         print("\tValores de las variables:")
         for var in variables:
             print(f"\t    {var.name}: {var.varValue}")
 
-        # Verificación de soluciones múltiples mediante el costo reducido (reduced cost)
-        multiple_solutions = False
-        for var in variables:
-            # Si la variable es no básica (valor igual a 0) y su costo reducido es cero, existen soluciones múltiples
-            if var.varValue == 0 and abs(var.dj) < 1e-5:
-                multiple_solutions = True
-                break
-
+        # Verificar soluciones múltiples
+        multiple_solutions = any(var.varValue == 0 and abs(var.dj) < 1e-5 for var in variables)
         if multiple_solutions:
             print("\nEl problema tiene soluciones múltiples (soluciones infinitas).\n")
         else:
@@ -128,9 +96,5 @@ def solve_problem():
 
 # Punto de entrada principal del script
 if __name__ == "__main__":
-    solve_problem()
-
-
-# LpProblem: define un problema de programación lineal. Puede ser de maximización (LpMaximize) o minimización (LpMinimize).
-# LpVariable: las variables tienen un límite inferior de 0 (lowBound=0), lo cual significa que ninguna es negativa.
-# lpSum: Se utiliza para definir una suma lineal al definir la función objetivo y las restricciones.
+    file_path = ".\\simplex\\simplex.txt"
+    solve_problem_from_file(file_path)
