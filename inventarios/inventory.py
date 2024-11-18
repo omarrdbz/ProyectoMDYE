@@ -76,8 +76,11 @@ def lagrange_multiplier(f_exprStr, g_exprStr, numVariables):
 
 
 if __name__ == '__main__':
+    print('<<<<<<<<<<<<< X1 = Harina X2 = Azucar >>>>>>>>>>>>>>>>')
     f_str, g_str, num_vars = readData('inventarios\AlmacenSinRefrigeracion.txt')
     lagrange_multiplier(f_str, g_str, num_vars)
+
+    print('<<<<<<<<<<<<< X1 = Leche X2 = Mantequilla X3 = Huevos >>>>>>>>>>>>>>>>')
     f_str, g_str, num_vars = readData('inventarios\AlmacenRefrigerado.txt')
     lagrange_multiplier(f_str, g_str, num_vars)
     
