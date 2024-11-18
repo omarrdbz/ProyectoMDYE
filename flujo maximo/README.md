@@ -1,7 +1,7 @@
 # Flujo Máximo (según algoritmo de Ford-Fulkerson)
 
 ## Descripción
-El modelo de la red se obtiene desde un archivo de texto `red.txt` para calcular el flujo máximo de un nodo a otro y el flujo residual en la red. También se mencionan las rutas que pueden ser eliminadas (sólo si se da el caso de que hay rutas no utilizadas)
+El modelo de la red se obtiene desde un archivo de texto llamado `red.txt` para calcular el flujo máximo de un nodo a otro y el flujo residual en la red. También se mencionan las rutas que pueden ser eliminadas (sólo si se da el caso de que hay rutas no utilizadas)
 
 ## Instrucciones de Uso
 1. Crear o modificar el archivo llamado `red.txt`.
@@ -34,6 +34,6 @@ G H 2
 ```
 
 ## Posibles Errores y Disclaimer
-- **Archivo no encontrado**: Si el archivo de `red.txt` no existe.
+- **Archivo no encontrado**: Si el archivo `red.txt` no existe.
 - **Formato de archivo inválido**: Si el archivo no sigue `estrictamente` el formato anterior.
 

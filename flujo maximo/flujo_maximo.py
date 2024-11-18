@@ -44,9 +44,9 @@ def main():
     print("\n-------------------------Flujo máximo (según algoritmo de Ford-Fulkerson)-------------------------")
     
     # Leer datos desde archivo
-    file_name = "red.txt"
+    file_name = ".\\flujo maximo\\red.txt"
     try:
-        with open(file_name, 'r') as file:
+        with open(file_name, 'r', encoding="utf-8") as file:
             print("\nObteniendo el modelo de red desde el archivo de texto 'red.txt'...")
             lines = file.readlines()
             
