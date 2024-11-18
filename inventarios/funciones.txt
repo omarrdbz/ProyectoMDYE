@@ -1,0 +1,10 @@
+articulos = 2
+k1 = 10
+d1 = 2
+h1 = 0.3
+dimension1 = 1
+k2 = 5  
+d2 = 4
+h2 = 0.1
+dimension2 = 1
+x + y - 25
