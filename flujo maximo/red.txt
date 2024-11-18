@@ -1,13 +1,19 @@
-8
-A,B,C,D,E,F,G,H
-A,H
-A B 4
-A C 2
-B D 3
-B E 6
-C E 1
-D F 5
-E F 2
-E G 3
-F H 8
-G H 2
+10
+Jamaica,Candelaria,PinoSuárez,Chabacano,CentroMédico,SaltoDelAgua,Balderas,BellasArtes,Hidalgo,Revolución
+Jamaica,Revolución
+Jamaica Candelaria 4
+Jamaica Chabacano 14
+Candelaria PinoSuárez 2
+Candelaria SaltoDelAgua 1
+Candelaria Balderas 1
+Chabacano CentroMédico 3
+Chabacano PinoSuárez 2
+Chabacano SaltoDelAgua 2
+Chabacano BellasArtes 7
+CentroMédico Balderas 3
+PinoSuárez BellasArtes 4
+SaltoDelAgua Balderas 1
+SaltoDelAgua BellasArtes 4
+Balderas Hidalgo 5
+BellasArtes Hidalgo 15
+Hidalgo Revolución 20

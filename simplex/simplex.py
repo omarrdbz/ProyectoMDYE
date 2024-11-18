@@ -5,16 +5,7 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def read_problem_from_file(file_path):
-    """
-    Lee la configuración de un problema de programación lineal desde un archivo de texto.
-
-    Args:
-        file_path (str): Ruta del archivo de texto.
-
-    Returns:
-        dict: Diccionario con tipo de problema, función objetivo y restricciones.
-    """
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding="utf-8") as file:
         lines = file.readlines()
 
     problem_data = {}
@@ -34,12 +25,6 @@ def read_problem_from_file(file_path):
     return problem_data
 
 def solve_problem_from_file(file_path):
-    """
-    Resuelve un problema de programación lineal definido en un archivo de texto.
-
-    Args:
-        file_path (str): Ruta del archivo de texto con la definición del problema.
-    """
     # Leer datos del problema desde el archivo
     problem_data = read_problem_from_file(file_path)
 

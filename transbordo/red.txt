@@ -1,0 +1,10 @@
+A,B,C,D,X
+A:60,B:140
+C:120,D:80
+A C 16
+A D 8
+A X 7
+B A 4
+B D 18
+D C 2
+X C 8
