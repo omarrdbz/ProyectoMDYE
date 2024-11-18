@@ -6,8 +6,10 @@ def inventario_un_articulo (demand, setup_cost, holding_cost):
     tcu = (setup_cost * demand / y) + holding_cost* y / 2
     t0 = y/Demand
     n = int (l/(y/Demand))
+    le = l - n*t0
+    leD = le*demand
     
-    print(f'Y = {int(y)} \nTCU = {int(tcu)} \nt0 = {int(t0)} \nn = {n}')
+    print(f'Y = {int(y)} \nTCU = {int(tcu)} \nt0 = {int(t0)} \nn = {n} \nLe = {le} \nLeD = {leD}')
 
 
 if __name__ == "__main__":

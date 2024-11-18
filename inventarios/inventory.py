@@ -23,7 +23,7 @@ def readData(ruta_archivo):
 
     f_exprStr = ''
     for i, articulo in enumerate(articulos, start=1):
-        f_exprStr += f"{articulos[articulo]['k']}*{articulos[articulo]['d']}/x{i} + {articulos[articulo]['h']}*x{i}/2 + "
+        f_exprStr += f"{articulos[articulo]['k']}*{articulos[articulo]['d']}/y{i} + {articulos[articulo]['h']}*y{i}/2 + "
     
     f_exprStr = f_exprStr[:-3]  # Eliminar el último ' + '
     g_exprStr = lineas[-1].strip()
@@ -32,7 +32,7 @@ def readData(ruta_archivo):
 
 def lagrange_multiplier(f_exprStr, g_exprStr, numVariables):
     # Definir variables simbólicas
-    variables = symbols(f'x1:{numVariables + 1}')  # Genera x1, x2, ..., xn
+    variables = symbols(f'y1:{numVariables + 1}')  # Genera x1, x2, ..., xn
     lam = symbols('lam')  # Multiplicador de Lagrange
 
     # Función objetivo y restricción
