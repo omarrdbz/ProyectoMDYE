@@ -158,6 +158,7 @@ if __name__ == "__main__":
     if(resultado["Status"] == pulp.LpStatusOptimal):
         print("Envíos:")
         for arco, flujo in resultado["Envios"].items():
+            if flujo == 0: continue
             print(f"{arco}: {flujo}")
         print(f"Costo total: {resultado['Costo_Total']}")
 
