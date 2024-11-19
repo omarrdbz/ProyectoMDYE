@@ -32,7 +32,7 @@ def readData(ruta_archivo):
 
 def lagrange_multiplier(f_exprStr, g_exprStr, numVariables):
     # Definir variables simbólicas
-    variables = symbols(f'y1:{numVariables + 1}')  # Genera x1, x2, ..., xn
+    variables = symbols(f'y1:{numVariables + 1}')  # Genera y1, y2, ..., yn
     lam = symbols('lam')  # Multiplicador de Lagrange
 
     # Función objetivo y restricción
@@ -59,30 +59,36 @@ def lagrange_multiplier(f_exprStr, g_exprStr, numVariables):
     print("\nSoluciones encontradas:")
     for sol in solutions:
         if isinstance(sol, dict):
-            # Si la solución es un diccionario
-            var_solutions = [int(round(sol[var].evalf())) for var in variables]
-            lam_solution = int(round(sol[lam].evalf()))
+            # Filtrar soluciones reales y positivas
+            if all(sol[var].is_real and sol[var] > 0 for var in variables):
+                var_solutions = {var: int(round(sol[var].evalf())) for var in variables}
+                lam_solution = int(round(sol[lam].evalf())) if sol[lam].is_real else None
+            else:
+                print("Solución descartada (valores no reales o no positivos)")
+                continue
         elif isinstance(sol, tuple):
-            # Si la solución es una tupla
-            #int(x_sol.evalf()) if x_sol.is_real else None
-            var_solutions = [int(round(val.evalf())) if val.is_real else None for val in sol[:-1]]
-            lam_solution = int(round(sol[-1].evalf())) if sol[-1].is_real else None
+            if all(val.is_real and val > 0 for val in sol[:-1]):
+                var_solutions = {var: int(round(val.evalf())) for var, val in zip(variables, sol[:-1])}
+                lam_solution = int(round(sol[-1].evalf())) if sol[-1].is_real else None
+            else:
+                print("Solución descartada (valores no reales o no positivos)")
+                continue
         else:
             raise TypeError("Formato inesperado en las soluciones devueltas por solve.")
 
         # Mostrar soluciones enteras
-        variable_values = ", ".join(f"{var} = {val}" for var, val in zip(variables, var_solutions))
+        variable_values = ", ".join(f"{var} = {val}" for var, val in var_solutions.items())
         print(f"{variable_values}, λ = {lam_solution}")
-
+        
+        # Evaluar la función objetivo
+        f_value = f_expr.subs(var_solutions)
+        print(f"Valor de la función objetivo: {f_value.evalf():.2f}")
 
 if __name__ == '__main__':
     print('<<<<<<<<<<<<< X1 = Harina X2 = Azucar >>>>>>>>>>>>>>>>')
     f_str, g_str, num_vars = readData('inventarios\AlmacenSinRefrigeracion.txt')
     lagrange_multiplier(f_str, g_str, num_vars)
-
+    
     print('<<<<<<<<<<<<< X1 = Leche X2 = Mantequilla X3 = Huevos >>>>>>>>>>>>>>>>')
     f_str, g_str, num_vars = readData('inventarios\AlmacenRefrigerado.txt')
     lagrange_multiplier(f_str, g_str, num_vars)
-    
-    
-
