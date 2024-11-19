@@ -8,7 +8,7 @@ d2 = 60
 h2 = 0.4
 dimension2 = 1
 k3 = 5
-d3 = 1107    
+d3 = 1422    
 h3 = 0.4
 dimension3 = 1
 y1 + y2 + y3 - 150

@@ -1,4 +1,6 @@
-from sympy import symbols, diff, Eq, solve, sympify
+from scipy.optimize import minimize
+import numpy as np
+from sympy import symbols, sympify
 
 def readData(ruta_archivo):
     articulos = {}
@@ -30,65 +32,39 @@ def readData(ruta_archivo):
     
     return f_exprStr, g_exprStr, num_articulos
 
-def lagrange_multiplier(f_exprStr, g_exprStr, numVariables):
-    # Definir variables simbólicas
-    variables = symbols(f'y1:{numVariables + 1}')  # Genera y1, y2, ..., yn
-    lam = symbols('lam')  # Multiplicador de Lagrange
-
-    # Función objetivo y restricción
-    f_expr = sympify(f_exprStr)  # Convierte a expresión simbólica
+def lagrange_with_minimize(f_exprStr, g_exprStr, numVariables):
+    # Convertir expresiones simbólicas a funciones numéricas
+    y_symbols = symbols(f'y1:{numVariables + 1}')
+    f_expr = sympify(f_exprStr)
     g_expr = sympify(g_exprStr)
 
-    print(f"Función objetivo: {f_expr}")
-    print(f"Restricción: {g_expr}")
+    # Crear funciones lambda para evaluación numérica
+    f_func = lambda y: float(f_expr.subs({f"y{i+1}": y[i] for i in range(numVariables)}))
+    g_func = lambda y: float(g_expr.subs({f"y{i+1}": y[i] for i in range(numVariables)}))
+    
+    # Restricción de igualdad
+    constraint = {'type': 'eq', 'fun': g_func}
 
-    # Gradientes de f y g
-    grad_f = [diff(f_expr, var) for var in variables]
-    grad_g = [diff(g_expr, var) for var in variables]
+    # Solución inicial (valores positivos arbitrarios)
+    y0 = np.ones(numVariables)
 
-    # Ecuaciones de los multiplicadores de Lagrange
-    equations = [
-        Eq(grad_f[i] - lam * grad_g[i], 0) for i in range(len(variables))
-    ]
-    equations.append(Eq(g_expr, 0))  # Agregar la restricción
+    # Ejecutar minimización
+    result = minimize(f_func, y0, constraints=[constraint], bounds=[(1e-6, None)] * numVariables)
 
-    # Resolver el sistema de ecuaciones
-    solutions = solve(equations, (*variables, lam))
-
-    # Mostrar soluciones
-    print("\nSoluciones encontradas:")
-    for sol in solutions:
-        if isinstance(sol, dict):
-            # Filtrar soluciones reales y positivas
-            if all(sol[var].is_real and sol[var] > 0 for var in variables):
-                var_solutions = {var: int(round(sol[var].evalf())) for var in variables}
-                lam_solution = int(round(sol[lam].evalf())) if sol[lam].is_real else None
-            else:
-                print("Solución descartada (valores no reales o no positivos)")
-                continue
-        elif isinstance(sol, tuple):
-            if all(val.is_real and val > 0 for val in sol[:-1]):
-                var_solutions = {var: int(round(val.evalf())) for var, val in zip(variables, sol[:-1])}
-                lam_solution = int(round(sol[-1].evalf())) if sol[-1].is_real else None
-            else:
-                print("Solución descartada (valores no reales o no positivos)")
-                continue
-        else:
-            raise TypeError("Formato inesperado en las soluciones devueltas por solve.")
-
-        # Mostrar soluciones enteras
-        variable_values = ", ".join(f"{var} = {val}" for var, val in var_solutions.items())
-        print(f"{variable_values}, λ = {lam_solution}")
-        
-        # Evaluar la función objetivo
-        f_value = f_expr.subs(var_solutions)
-        print(f"Valor de la función objetivo: {f_value.evalf():.2f}")
+    # Verificar el resultado
+    if result.success:
+        print("Solución encontrada:")
+        for i, val in enumerate(result.x, start=1):
+            print(f"y{i} = {val:.2f}")
+        print(f"Valor mínimo de la función objetivo: {result.fun:.2f}")
+    else:
+        print("No se encontró una solución. Razón:", result.message)
 
 if __name__ == '__main__':
     print('<<<<<<<<<<<<< X1 = Harina X2 = Azucar >>>>>>>>>>>>>>>>')
     f_str, g_str, num_vars = readData('inventarios\AlmacenSinRefrigeracion.txt')
-    lagrange_multiplier(f_str, g_str, num_vars)
-    
+    lagrange_with_minimize(f_str, g_str, num_vars)
+
     print('<<<<<<<<<<<<< X1 = Leche X2 = Mantequilla X3 = Huevos >>>>>>>>>>>>>>>>')
     f_str, g_str, num_vars = readData('inventarios\AlmacenRefrigerado.txt')
-    lagrange_multiplier(f_str, g_str, num_vars)
+    lagrange_with_minimize(f_str, g_str, num_vars)
