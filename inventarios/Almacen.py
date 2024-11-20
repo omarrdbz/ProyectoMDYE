@@ -63,10 +63,6 @@ def lagrange_with_minimize(f_exprStr, g_exprStr, numVariables):
         print("No se encontró una solución. Razón:", result.message)
 
 if __name__ == '__main__':
-    print('<<<<<<<<<<<<< X1 = Harina X2 = Azucar >>>>>>>>>>>>>>>>')
-    f_str, g_str, num_vars = readData('inventarios/AlmacenSinRefrigeracion.txt')
-    lagrange_with_minimize(f_str, g_str, num_vars)
-
-    print('<<<<<<<<<<<<< X1 = Leche X2 = Mantequilla X3 = Huevos >>>>>>>>>>>>>>>>')
+    print('Y1 = Leche Y2 = Mantequilla Y3 = Huevos')
     f_str, g_str, num_vars = readData('inventarios/AlmacenRefrigerado.txt')
     lagrange_with_minimize(f_str, g_str, num_vars)
