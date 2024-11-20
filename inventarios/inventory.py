@@ -54,17 +54,19 @@ def lagrange_with_minimize(f_exprStr, g_exprStr, numVariables):
     # Verificar el resultado
     if result.success:
         print("Solución encontrada:")
-        for i, val in enumerate(result.x, start=1):
-            print(f"y{i} = {val:.2f}")
-        print(f"Valor mínimo de la función objetivo: {result.fun:.2f}")
+        # Redondear resultados a enteros
+        y_rounded = [int(round(val)) for val in result.x]
+        for i, val in enumerate(y_rounded, start=1):
+            print(f"y{i} = {val}")
+        print(f"Valor mínimo de la función objetivo (redondeado): {f_func(y_rounded):.2f}")
     else:
         print("No se encontró una solución. Razón:", result.message)
 
 if __name__ == '__main__':
     print('<<<<<<<<<<<<< X1 = Harina X2 = Azucar >>>>>>>>>>>>>>>>')
-    f_str, g_str, num_vars = readData('inventarios\AlmacenSinRefrigeracion.txt')
+    f_str, g_str, num_vars = readData('inventarios/AlmacenSinRefrigeracion.txt')
     lagrange_with_minimize(f_str, g_str, num_vars)
 
     print('<<<<<<<<<<<<< X1 = Leche X2 = Mantequilla X3 = Huevos >>>>>>>>>>>>>>>>')
-    f_str, g_str, num_vars = readData('inventarios\AlmacenRefrigerado.txt')
+    f_str, g_str, num_vars = readData('inventarios/AlmacenRefrigerado.txt')
     lagrange_with_minimize(f_str, g_str, num_vars)
