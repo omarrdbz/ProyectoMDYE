@@ -39,7 +39,7 @@ def solve_problem_from_file(file_path):
 
     # Crear las variables de decisión
     num_vars = len(problem_data['objective'])
-    variables = [LpVariable(f"x{i+1}", lowBound=0,  cat="Integer") for i in range(num_vars)]
+    variables = [LpVariable(f"x{i+1}", lowBound=0, cat="Integer") for i in range(num_vars)]
 
     # Definir la función objetivo
     problem += lpSum([problem_data['objective'][i] * variables[i] for i in range(num_vars)]), "Objective_Function"
@@ -68,9 +68,11 @@ def solve_problem_from_file(file_path):
         # Verificar soluciones múltiples
         multiple_solutions = any(var.varValue == 0 and abs(var.dj) < 1e-5 for var in variables)
         if multiple_solutions:
-            print("\nEl problema tiene soluciones múltiples (soluciones infinitas).\n")
+            print("\nEl problema tiene soluciones múltiples (soluciones infinitas).")
         else:
-            print("\nEl problema tiene una única solución óptima.\n")
+            print("\nEl problema tiene una única solución óptima.")
+        print("\nRecuerde que el programa intencionalmente se limitó a entregar el valor óptimo a partir de variables ÚNICAMENTE enteras (según lo solicitado), lo que puede afectar la naturaleza del resultado final (pudiendo evitar posibles soluciones múltiples, dar un valor diferente al esperado, etc.).")
+        print("En caso de querer eliminar esta limitación, favor de consultar el archivo README.md correspondiente y seguir las instrucciones.\n")
 
     elif LpStatus[problem.status] == "Infeasible":
         print("\nNo existe solución factible para el problema.\n")
