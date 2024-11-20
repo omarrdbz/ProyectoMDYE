@@ -1,14 +1,14 @@
 articulos = 3
 k1 = 45
 d1 = 50   
-h1 = 0.4
+h1 = 0.42
 dimension1 = 1
 k2 = 600  
 d2 = 60
-h2 = 0.4
+h2 = 3.20
 dimension2 = 1
 k3 = 5
 d3 = 1422    
-h3 = 0.4
+h3 = 0.63
 dimension3 = 1
 y1 + y2 + y3 - 150

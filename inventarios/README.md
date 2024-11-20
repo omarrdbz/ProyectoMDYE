@@ -56,3 +56,25 @@ Este archivo representa:
 # Requisitos
 - **Python 3.8 o superior.**
 - **Bibliotecas**: pip install scipy numpy sympy
+
+
+# Modelo Determinístico para Optimización de Inventarios General
+
+Este script implementa un modelo determinístico para optimizar el inventario de un solo artículo, basado en la fórmula del Lote Económico de Pedido (EOQ). Calcula valores clave como la cantidad económica de pedido (Y), el costo total anual (TCU), el tiempo entre pedidos (t0), y la pérdida esperada.
+
+## Descripción del Código
+
+La función principal del script es `inventario_un_articulo`, que calcula los siguientes valores:
+- **Y**: Cantidad económica de pedido.
+- **TCU**: Costo total anual.
+- **t0**: Tiempo entre pedidos.
+- **n**: Número de pedidos completos durante el periodo.
+- **Le**: Tiempo de espera restante.
+- **LeD**: Pérdida esperada en términos de demanda.
+
+El script incluye dos ejemplos prácticos para **azúcar** y **harina**, con demandas y costos específicos.
+
+## Parámetros de la Función
+
+```python
+def inventario_un_articulo(demand, setup_cost, holding_cost):
