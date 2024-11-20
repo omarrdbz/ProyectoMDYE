@@ -5,7 +5,15 @@ Calcula el valor óptimo de la función objetivo y las variables. Muestra tambi�
 
 El modelo matemático lo obtiene desde un archivo de texto llamado: `simplex.txt`.
 
-
+## Nota importante
+El programa está limitado a entregar el  óptimo sólo con valores `enteros` en las variables resultantes, lo que puede modificar la naturaleza de la solución. En caso de querer eliminar esta limitante, dirígase a la línea 42:
+  ```
+  42: variables = [LpVariable(f"x{i+1}", lowBound=0, cat="Integer") for i in range(num_vars)]
+  ```
+Y elimine el fragmento `cat="Integer"`. Ejemplo:
+   ```
+  42: variables = [LpVariable(f"x{i+1}", lowBound=0) for i in range(num_vars)]
+  ```
 
 ## Instrucciones de Uso
 1. Crear o modificar el archivo llamado `simplex.txt`.
